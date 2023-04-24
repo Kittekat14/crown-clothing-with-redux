@@ -109,8 +109,8 @@ export const createUserDocumentFromAuth = async (
   }
 
   // if user data exists
-
-  return userDocRef;
+  // changed in section 17 (Redux Sagas)
+  return userSnapshot;
 };
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
@@ -133,3 +133,17 @@ export const onAuthStateChangedListener = (callback) =>
   // this function fires a callback whenever the auth singleton changes,
   // example: signout or signin (permanent listener!):
   onAuthStateChanged(auth, callback);
+
+// we modified the part before in section 17.177:
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (userAuth) => {
+        unsubscribe();
+        resolve(userAuth);
+      },
+      reject
+    );
+  });
+};

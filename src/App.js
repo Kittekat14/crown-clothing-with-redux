@@ -9,27 +9,21 @@ import CheckoutPage from "./routes/checkout/checkout.component";
 
 import {
   createUserDocumentFromAuth,
+  getCurrentUser,
   onAuthStateChangedListener,
 } from "./utils/firebase/firebase.utils";
 
 import { useDispatch } from "react-redux";
 // action / action creator:
-import { setCurrentUser } from "./store/user/user.action";
+import { checkUserSession, setCurrentUser } from "./store/user/user.action";
 
 function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChangedListener((user) => {
-      if (user) {
-        createUserDocumentFromAuth(user);
-      }
-      // an action always have to be dispatched
-      dispatch(setCurrentUser(user));
-    });
-
-    return unsubscribe;
-  }, [dispatch]);
+    // has been changed in section 17:
+    dispatch(checkUserSession());
+  }, []);
 
   return (
     <Routes>
